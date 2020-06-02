@@ -36,28 +36,29 @@ class Todo {
   }
 
   set date(String newDate) {
-    _date = date;
+    _date = newDate;
   }
 
   //transforming the todo into a map
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
-    map['title'] = _title;
-    map['description'] = _description;
-    map['priority'] = _priority;
-    map['date'] = _date;
+    map["title"] = _title;
+    map["description"] = _description;
+    map["priority"] = _priority;
+    map["date"] = _date;
 
     if (_id != null) {
-      map['id'] = _id;
+      map["id"] = _id;
     }
     return map;
   }
 
   //Transform the object into a todo
   Todo.fromObject(dynamic o) {
-    this._id = o['id'];
-    this._title = o['title'];
-    this._description = o['description'];
+    this._id = o["id"];
+    this._title = o["title"];
+    this._description = o["description"];
+    this._priority = o["priority"];
     this._date = o["date"];
   }
 }

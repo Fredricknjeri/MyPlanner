@@ -1,17 +1,19 @@
-import 'package:MyPlanner/model/todo.dart';
 import 'package:flutter/material.dart';
+import 'package:MyPlanner/model/todo.dart';
 import 'package:MyPlanner/util/dbhelper.dart';
 import 'package:MyPlanner/screens/tododetail.dart';
 
 class TodoList extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => TodoListState();
+  State<StatefulWidget> createState() => TodoListState(); 
+  
 }
 
 class TodoListState extends State {
   DbHelper helper = DbHelper();
   List<Todo> todos;
   int count = 0;
+
   @override
   Widget build(BuildContext context) {
     if (todos == null) {
@@ -19,56 +21,55 @@ class TodoListState extends State {
       getData();
     }
     return Scaffold(
-        body: todoListItems(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            navigateToDetail(Todo('', 3, ''));
-          },
-          tooltip: 'Add a new Todo',
-          child: new Icon(Icons.add),
-        ));
+      body: todoListItems(),
+      floatingActionButton: FloatingActionButton(
+        onPressed:() {
+          navigateToDetail(Todo('',3,''));
+        }
+        ,
+        tooltip: "Add new Todo",
+        child: new Icon(Icons.add),
+      ),
+    );
   }
-
   ListView todoListItems() {
     return ListView.builder(
       itemCount: count,
       itemBuilder: (BuildContext context, int position) {
         return Card(
-            color: Colors.white,
-            elevation: 2.0,
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: getColor(this.todos[position].priority),
-                child: Text(this.todos[position].id.toString()),
-              ),
-              title: Text(this.todos[position].title),
-              subtitle: Text(this.todos[position].date),
-              onTap: () {
-                debugPrint("Tapped on " + this.todos[position].id.toString());
-                navigateToDetail(this.todos[position]);
-              },
-            ));
+          color: Colors.white,
+          elevation: 2.0,
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundColor: getColor(this.todos[position].priority),
+              child:Text(this.todos[position].priority.toString()),
+            ),
+          title: Text(this.todos[position].title),
+          subtitle: Text(this.todos[position].date),
+          onTap: () {
+            debugPrint("Tapped on " + this.todos[position].id.toString());
+            navigateToDetail(this.todos[position]);
+          },
+          ),
+        );
       },
     );
   }
-
   void getData() {
     final dbFuture = helper.initializeDb();
     dbFuture.then((result) {
-      //retrieve all the items from the todos table
       final todosFuture = helper.getTodos();
-      //when data is retrieved, a temporaly list of todos
-      todosFuture.then((result) {
+      todosFuture.then((result){
         List<Todo> todoList = List<Todo>();
         count = result.length;
-        for (int i = 0; i < count; i++) {
+        for (int i=0; i<count; i++) {
           todoList.add(Todo.fromObject(result[i]));
           debugPrint(todoList[i].title);
         }
         setState(() {
-          todos = todoList;
-          count = count;
-        });
+                  todos = todoList;
+                  count = count;
+                });
         debugPrint("Items " + count.toString());
       });
     });
@@ -85,17 +86,19 @@ class TodoListState extends State {
       case 3:
         return Colors.green;
         break;
+      
       default:
         return Colors.green;
     }
   }
 
-// navigate to todo list detail screen
   void navigateToDetail(Todo todo) async {
-    bool result = await Navigator.push(
-        context, MaterialPageRoute(builder: (context) => TodoDetail(todo)));
+    bool result = await Navigator.push(context, 
+        MaterialPageRoute(builder: (context) => TodoDetail(todo)),
+    );
     if (result == true) {
       getData();
     }
   }
+  
 }
