@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart' as p; //for running on real device
 import 'dart:async';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -33,7 +35,8 @@ class DbHelper {
 //Method that opens or creates the database if it doesn't exist
   Future<Database> initializeDb() async {
     Directory dir = await getApplicationDocumentsDirectory();
-    String path = dir.path + "todos.db";
+    //String path = dir.path + "todos.db";
+    String path = p.join(dir.path, 'todos.db' );//to ensure it runs on mobile
 
     var dbTodos = await openDatabase(path, version: 1, onCreate: _createDb);
     return dbTodos;

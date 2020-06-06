@@ -3,9 +3,8 @@ import 'package:MyPlanner/model/todo.dart';
 import 'package:MyPlanner/util/dbhelper.dart';
 import 'package:intl/intl.dart'; //Allow to change date format
 
-
 DbHelper helper = DbHelper();
-final List<String> choices = const <String> [
+final List<String> choices = const <String>[
   'Save Todo & Back',
   'Delete Todo',
   'Back to List'
@@ -21,8 +20,8 @@ class TodoDetail extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => TodoDetailState(todo);
-
 }
+
 class TodoDetailState extends State {
   Todo todo;
   TodoDetailState(this.todo);
@@ -35,73 +34,74 @@ class TodoDetailState extends State {
   Widget build(BuildContext context) {
     titleController.text = todo.title;
     descriptionController.text = todo.description;
-    TextStyle textStyle = Theme.of(context).textTheme.title;
+    TextStyle textStyle = Theme.of(context).textTheme.headline6;
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(todo.title),
-        actions: <Widget>[
-          PopupMenuButton<String>(
-            onSelected: select,
-            itemBuilder: (BuildContext context) {
-              return choices.map((String choice){
-                return PopupMenuItem<String>(
-                  value: choice,
-                  child: Text(choice),
-                );
-              }).toList();
-            },
-          ),
-        ],
-      ),
-      body: Padding( 
-        padding: EdgeInsets.only(top:35.0, left: 10.0, right: 10.0),
-        child: ListView(children: <Widget>[Column(
-        children: <Widget>[
-          TextField(
-            controller: titleController,
-            style: textStyle,
-            onChanged: (value)=> this.updateTitle(),
-            decoration: InputDecoration(
-              labelText: "Title",
-              labelStyle: textStyle,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5.0),
-              )
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Text(todo.title),
+          actions: <Widget>[
+            PopupMenuButton<String>(
+              onSelected: select,
+              itemBuilder: (BuildContext context) {
+                return choices.map((String choice) {
+                  return PopupMenuItem<String>(
+                    value: choice,
+                    child: Text(choice),
+                  );
+                }).toList();
+              },
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top:15.0, bottom: 15.0),
-            child: TextField(
-            controller: descriptionController,
-            style: textStyle,
-            onChanged: (value) => this.updateDescription(),
-            decoration: InputDecoration(
-              labelText: "Description",
-              labelStyle: textStyle,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5.0),
-              )
-            ),
-          )),
-          ListTile(title:DropdownButton<String>(
-            items: _priorities.map((String value) {
-              return DropdownMenuItem<String> (
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            style: textStyle,
-            value:retrievePriority(todo.priority),
-            onChanged: (value)=>updatePriority(value),
-          ))
-        ],
-      )],)
-      )
-    );
+          ],
+        ),
+        body: Padding(
+            padding: EdgeInsets.only(top: 35.0, left: 10.0, right: 10.0),
+            child: ListView(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    TextField(
+                      controller: titleController,
+                      style: textStyle,
+                      onChanged: (value) => this.updateTitle(),
+                      decoration: InputDecoration(
+                          labelText: "Title",
+                          labelStyle: textStyle,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          )),
+                    ),
+                    Padding(
+                        padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                        child: TextField(
+                          controller: descriptionController,
+                          style: textStyle,
+                          onChanged: (value) => this.updateDescription(),
+                          decoration: InputDecoration(
+                              labelText: "Description",
+                              labelStyle: textStyle,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                              )),
+                        )),
+                    ListTile(
+                        title: DropdownButton<String>(
+                      items: _priorities.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      style: textStyle,
+                      value: retrievePriority(todo.priority),
+                      onChanged: (value) => updatePriority(value),
+                    ))
+                  ],
+                )
+              ],
+            )));
   }
 
-  void select (String value) async {
+  void select(String value) async {
     int result;
     switch (value) {
       case mnuSave:
@@ -118,15 +118,12 @@ class TodoDetailState extends State {
             title: Text("Delete Todo"),
             content: Text("The Todo has been deleted"),
           );
-          showDialog(
-            context: context,
-            builder: (_) => alertDialog);
-          
+          showDialog(context: context, builder: (_) => alertDialog);
         }
         break;
-        case mnuBack:
-          Navigator.pop(context, true);
-          break;
+      case mnuBack:
+        Navigator.pop(context, true);
+        break;
       default:
     }
   }
@@ -135,8 +132,7 @@ class TodoDetailState extends State {
     todo.date = new DateFormat.yMd().format(DateTime.now());
     if (todo.id != null) {
       helper.updateTodo(todo);
-    }
-    else {
+    } else {
       helper.insertTodo(todo);
     }
     Navigator.pop(context, true);
@@ -155,21 +151,19 @@ class TodoDetailState extends State {
         break;
     }
     setState(() {
-          _priority=value;
-        });
+      _priority = value;
+    });
   }
 
   String retrievePriority(int value) {
-    return _priorities[value-1];
+    return _priorities[value - 1];
   }
 
-  void updateTitle(){
+  void updateTitle() {
     todo.title = titleController.text;
   }
 
   void updateDescription() {
     todo.description = descriptionController.text;
   }
-
 }
-
